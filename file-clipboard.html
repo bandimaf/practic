@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вставка изображения из буфера обмена</title>
+</head>
+<body>
+    <h1>Изображение из буфера обмена</h1>
+    <img id="clipboardImage" src="" alt="Изображение из буфера обмена">
+    <script>
+        document.addEventListener('paste', async (event) => {
+            const items = event.clipboardData.items;
+            for (const item of items) {
+                if (item.type.indexOf('image') !== -1) {
+                    const imageBlob = item.getAsFile();
+                    const imageUrl = await readFileAsDataURL(imageBlob);
+                    document.getElementById('clipboardImage').src = imageUrl;
+                    console.log(imageUrl)
+                }
+            }
+        });
+
+        async function readFileAsDataURL(blob) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
+        }
+    </script>
+</body>
+</html>
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вставка изображения из буфера обмена</title>
+</head>
+<body>
+    <h1>Изображение из буфера обмена</h1>
+    <img id="clipboardImage" src="" alt="Изображение из буфера обмена">
+    <button id="uploadButton">Отправить на сервер</button>
+    <input type="checkbox" id="sendCheckbox"> Отправить изображение
+
+    <script>
+        document.addEventListener('paste', async (event) => {
+            const items = event.clipboardData.items;
+            for (const item of items) {
+                if (item.type.indexOf('image') !== -1) {
+                    const imageBlob = item.getAsFile();
+                    const imageUrl = await readFileAsDataURL(imageBlob);
+                    document.getElementById('clipboardImage').src = imageUrl;
+                }
+            }
+        });
+
+        document.getElementById('uploadButton').addEventListener('click', async () => {
+            const sendImage = document.getElementById('sendCheckbox').checked;
+            if (sendImage) {
+                // Отправьте изображение на сервер
+                // Здесь вы можете использовать AJAX или Fetch API для отправки данных
+                // Пример:
+                // const imageData = document.getElementById('clipboardImage').src;
+                // fetch('/upload', {
+                //     method: 'POST',
+                //     body: JSON.stringify({ image: imageData }),
+                //     headers: {
+                //         'Content-Type': 'application/json'
+                //     }
+                // });
+                console.log('Изображение отправлено на сервер');
+            } else {
+                console.log('Изображение не отправлено');
+            }
+        });
+
+        async function readFileAsDataURL(blob) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
+        }
+    </script>
+</body>
+</html> -->

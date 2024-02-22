@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вставка изображения из буфера обмена</title>
+</head>
+
+<body>
+    <div style="margin-bottom: 50px; display: flex; ">
+        <label style="margin-right: 10px;">
+            <input type="checkbox" id="check_poster1" />
+            <span>Постер 1</span>
+        </label>
+        <div>
+            <input type="file" style="margin-bottom: 10px;">
+            <div id="drop-area1"
+                style="width:280px;height:150px;border:1px solid #ccc;text-align:center; margin-bottom: 10px;">
+                <p>Вставьте изображение сюда</p>
+            </div>
+            <div id="message-area" style="display:none;">
+                <img id="img-poster1" style="height:1em;">
+                <span>Изображение загружено</span>
+            </div>
+        </div>
+
+    </div>
+
+    <div style="margin-bottom: 25px; display: flex; ">
+        <label style="margin-right: 10px;">
+            <input type="checkbox" id="check_poster2" />
+            <span>Постер 2</span>
+        </label>
+        <div>
+            <input type="file" style="margin-bottom: 10px;">
+            <div id="drop-area2"
+                style="width:280px;height:150px;border:1px solid #ccc;text-align:center; margin-bottom: 10px;">
+                <p id="clipboard-text2">Вставьте изображение сюда</p>
+                <img id="img-poster2" style="display:none; max-width: 280px; max-height: 150px;">
+            </div>
+        </div>
+
+    </div>
+
+    <button onclick="sendData()">Отправить</button>
+
+
+    <script>
+
+        let clipboardText2 = document.getElementById('clipboard-text2');
+        let dropArea1 = document.getElementById('drop-area1');
+        let dropArea2 = document.getElementById('drop-area2');
+        let messageArea = document.getElementById('message-area');
+        let poster1 = document.getElementById('img-poster1');
+        let poster2 = document.getElementById('img-poster2');
+
+        dropArea1.addEventListener('mouseover', function (e) {
+            window.addEventListener('paste', pasteHandler);
+        });
+
+        dropArea1.addEventListener('mouseout', function (e) {
+            window.removeEventListener('paste', pasteHandler);
+        });
+
+        dropArea2.addEventListener('mouseover', function (e) {
+            window.addEventListener('paste', pasteHandler2);
+        });
+
+        dropArea2.addEventListener('mouseout', function (e) {
+            window.removeEventListener('paste', pasteHandler2);
+        });
+
+        function pasteHandler(e) {
+            let paste = (e.clipboardData || window.clipboardData).items;
+            for (let i = 0; i < paste.length; i++) {
+                if (paste[i].type.indexOf("image") === 0) {
+                    let img = new Image();
+                    img.src = URL.createObjectURL(paste[i].getAsFile());
+                    poster1.src = img.src;
+                    messageArea.style.display = 'block';
+                }
+            }
+        }
+
+        function pasteHandler2(e) {
+            let paste = (e.clipboardData || window.clipboardData).items;
+            for (let i = 0; i < paste.length; i++) {
+                if (paste[i].type.indexOf("image") === 0) {
+                    let img = new Image();
+                    img.src = URL.createObjectURL(paste[i].getAsFile());
+                    poster2.src = img.src;
+                    poster2.style.display = 'block';
+                    clipboardText2.style.display = 'none';
+                }
+            }
+        }
+
+        function sendData() {
+            if (document.getElementById('check_poster1').checked) {
+                fetch('#', {
+                    method: 'POST',
+                    // body: 
+                    // отправить poster1.src
+                });
+            }
+
+            if (document.getElementById('check_poster2').checked) {
+                fetch('#', {
+                    method: 'POST',
+                    // body: 
+                    // отправить poster2.src
+                });
+            }
+        }
+    </script>
+
+</body>
+
+</html>
